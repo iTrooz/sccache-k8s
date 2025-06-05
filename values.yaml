@@ -31,6 +31,11 @@ scheduler:
     httpGet:
       path: /ready
       port: scheduler
+  config: {}
+    # Additional scheduler configuration can be added here
+    # Example:
+    # max_idle_time = "3600s"
+    # heartbeat_timeout = "30s"
 
 worker:
   podAnnotations: {}
@@ -45,3 +50,13 @@ worker:
     httpGet:
       path: /ready
       port: http
+  config: {}
+    # Additional worker configuration can be added here
+    # Example:
+    # max_connections = 100
+    # idle_timeout = "600s"
+    # cache_size_limit = "10G"
+
+app:
+  token: "" # set in values.local.yaml
+  secretKey: "" # set in values.local.yaml

@@ -17,10 +17,11 @@ spec:
       {{- include "sccache.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.worker.podAnnotations }}
       annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/worker-configmap.yaml") . | sha256sum }}
+        {{- with .Values.worker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         app.kubernetes.io/component: worker
         {{- include "sccache.labels" . | nindent 8 }}
@@ -35,10 +36,13 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
-          args: ["server", "--scheduler", "$(SCHEDULER_ADDR)"]
-          env:
-            - name: SCHEDULER_ADDR
-              value: {{ printf "sccache://%s-scheduler:7634" (include "sccache.fullname" .) }}
+          args: ["server", "--config", "/etc/sccache/worker.conf"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/sccache
+              readOnly: true
+            - name: cache
+              mountPath: /cache
           ports:
             - containerPort: 3000
               name: worker
@@ -50,3 +54,10 @@ spec:
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "sccache.fullname" . }}-worker-config
+        - name: cache
+          emptyDir:
+            sizeLimit: 10Gi
