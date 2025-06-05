@@ -56,5 +56,5 @@ worker:
     # cache_size_limit = "10G"
 
 app:
-  token: "" # set in values.local.yaml
-  secretKey: "" # set in values.local.yaml
+  client_token: "" # set in values.local.yaml
+  scheduler_token: "" # set in values.local.yaml

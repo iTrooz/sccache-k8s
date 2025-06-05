@@ -19,8 +19,8 @@ data:
     bwrap_path = "/usr/bin/bwrap"
 
     [scheduler_auth]
-    type = "jwt_token"
-    token = "{{ .Values.app.token }}"
+    type = "token"
+    token = "{{ .Values.app.scheduler_token }}"
     
     {{- with .Values.worker.extra_config }}
     {{- toYaml . | nindent 4 }}

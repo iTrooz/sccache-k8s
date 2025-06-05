@@ -12,11 +12,11 @@ data:
 
     [client_auth]
     type = "token"
-    token = "{{ .Values.app.token }}"
+    token = "{{ .Values.app.client_token }}"
 
     [server_auth]
-    type = "jwt_hs256"
-    secret_key = "{{ .Values.app.secretKey }}"
+    type = "token"
+    token = "{{ .Values.app.scheduler_token }}"
 
     {{- with .Values.scheduler.extra_config }}
     {{- toYaml . | nindent 4 }}
