@@ -9,7 +9,7 @@ data:
   worker.conf: |
     cache_dir = "/cache"
     public_addr = "0.0.0.0:10501"
-    scheduler_url = "{{ printf "http://%s-scheduler:7634" (include "sccache.fullname" .) }}"
+    scheduler_url = "{{ printf "http://%s-scheduler.%s.svc.cluster.local:7634" (include "sccache.fullname" .) .Release.Namespace }}"
 
     [builder]
     type = "overlay"
