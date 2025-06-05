@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sccache.fullname" . }}-worker
+  labels:
+    {{- include "sccache.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: scheduler
+      protocol: TCP
+      name: scheduler
+  selector:
+    {{- include "sccache.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sccache.fullname" . }}-scheduler
+  labels:
+    app.kubernetes.io/component: scheduler
+    {{- include "sccache.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: scheduler
+      {{- include "sccache.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.scheduler.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app.kubernetes.io/component: scheduler
+        {{- include "sccache.labels" . | nindent 8 }}
+        {{- with .Values.scheduler.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: scheduler
+          image: {{ .Values.image }}
+          command: ["sccache-dist"]
+          args: ["scheduler"]
+          ports:
+            - containerPort: 7634
+              name: scheduler
+          {{- with .Values.scheduler.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.scheduler.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}

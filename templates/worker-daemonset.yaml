@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "sccache.fullname" . }}-worker
+  labels:
+    app.kubernetes.io/component: worker
+    {{- include "sccache.labels" . | nindent 4 }}
+spec:
+  # To allow updating more at the same time
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: worker
+      {{- include "sccache.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.worker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app.kubernetes.io/component: worker
+        {{- include "sccache.labels" . | nindent 8 }}
+        {{- with .Values.worker.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      nodeSelector:
+        {{- toYaml .Values.worker.nodeSelector | nindent 8 }}
+      containers:
+        - name: worker
+          image: {{ .Values.image }}
+          command: ["sccache-dist"]
+          args: ["server", "--scheduler", "$(SCHEDULER_ADDR)"]
+          env:
+            - name: SCHEDULER_ADDR
+              value: {{ printf "sccache://%s-scheduler:7634" (include "sccache.fullname" .) }}
+          ports:
+            - containerPort: 3000
+              name: worker
+          {{- with .Values.worker.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.worker.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
