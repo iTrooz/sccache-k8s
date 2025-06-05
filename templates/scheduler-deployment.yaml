@@ -27,6 +27,7 @@ spec:
       containers:
         - name: scheduler
           image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
           args: ["scheduler"]
           ports:

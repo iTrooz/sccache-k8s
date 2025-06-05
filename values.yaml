@@ -2,6 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 image: ghcr.io/itrooz/sccache:archlinux
+imagePullPolicy: Always
 
 # Scheduler service
 service:

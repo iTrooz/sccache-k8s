@@ -33,6 +33,7 @@ spec:
       containers:
         - name: worker
           image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
           args: ["server", "--scheduler", "$(SCHEDULER_ADDR)"]
           env:
