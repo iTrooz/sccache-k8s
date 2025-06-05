@@ -18,6 +18,6 @@ data:
     type = "jwt_hs256"
     secret_key = "{{ .Values.app.secretKey }}"
 
-    {{- with .Values.scheduler.config }}
+    {{- with .Values.scheduler.extra_config }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

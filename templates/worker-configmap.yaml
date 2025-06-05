@@ -22,6 +22,6 @@ data:
     type = "jwt_token"
     token = "{{ .Values.app.token }}"
     
-    {{- with .Values.worker.config }}
+    {{- with .Values.worker.extra_config }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

@@ -31,7 +31,7 @@ scheduler:
     httpGet:
       path: /ready
       port: scheduler
-  config: {}
+  extra_config: {}
     # Additional scheduler configuration can be added here
     # Example:
     # max_idle_time = "3600s"
@@ -50,7 +50,7 @@ worker:
     httpGet:
       path: /ready
       port: http
-  config: {}
+  extra_config: {}
     # Additional worker configuration can be added here
     # Example:
     # max_connections = 100
