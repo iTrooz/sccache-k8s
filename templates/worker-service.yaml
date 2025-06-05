@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sccache.fullname" . }}-worker
+  labels:
+    app.kubernetes.io/component: worker
+    {{- include "sccache.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local # to ensure only the local pod on the node is used
+  ports:
+    - port: 10501 # should be useless
+      targetPort: worker
+      nodePort: 30501
+      protocol: TCP
+      name: worker
+  selector:
+    app.kubernetes.io/component: worker
+    {{- include "sccache.selectorLabels" . | nindent 4 }}
