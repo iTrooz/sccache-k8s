@@ -41,13 +41,11 @@ worker:
   nodeSelector:
     sccache_worker: "true"
   livenessProbe:
-    httpGet:
-      path: /health
-      port: http
+    tcpSocket:
+      port: worker
   readinessProbe:
-    httpGet:
-      path: /ready
-      port: http
+    tcpSocket:
+      port: worker
   extra_config: {}
     # Additional worker configuration can be added here
     # Example:
