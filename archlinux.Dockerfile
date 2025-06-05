@@ -1,11 +1,11 @@
 FROM archlinux:latest
 
 # Update system, install packages, and clean up
-RUN pacman -Syu --noconfirm && \
+RUN --mount=type=cache,target=/var/cache/pacman \
+    pacman -Syu --noconfirm && \
     pacman -S --noconfirm \
         rust cargo \
         gcc clang \
-        sccache && \
-    pacman -Scc --noconfirm && rm -rf /var/cache/pacman
+        sccache bubblewrap
 
 ENTRYPOINT ["/bin/sccache-dist"]
