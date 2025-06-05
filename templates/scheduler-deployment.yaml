@@ -30,7 +30,7 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
-          args: ["scheduler", "--config", "/etc/sccache/scheduler.conf", "--syslog", "trace"]
+          args: ["scheduler", "--config", "/etc/sccache/scheduler.conf", "--syslog", "{{ .Values.app.loglevel }}"]
           volumeMounts:
             - name: config
               mountPath: /etc/sccache

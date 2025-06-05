@@ -36,7 +36,7 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
-          args: ["server", "--config", "/etc/sccache/worker.conf"]
+          args: ["server", "--config", "/etc/sccache/worker.conf", "--syslog", "{{ .Values.app.loglevel }}"]
           volumeMounts:
             - name: config
               mountPath: /etc/sccache
