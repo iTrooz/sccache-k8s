@@ -19,6 +19,7 @@ spec:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/worker-configmap.yaml") . | sha256sum }}
+        checksum/proxy-configmap: {{ include (print $.Template.BasePath "/worker-proxy-configmap.yaml") . | sha256sum }}
         {{- with .Values.worker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -31,6 +32,39 @@ spec:
     spec:
       nodeSelector:
         {{- toYaml .Values.worker.nodeSelector | nindent 8 }}
+      initContainers:
+        - name: worker-config-processor
+          image: {{ .Values.image }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - "envsubst '$NODE_IP' < /etc/sccache-template/worker.conf > /etc/sccache-processed/worker.conf"
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: config-template
+              mountPath: /etc/sccache-template
+              readOnly: true
+            - name: config-processed
+              mountPath: /etc/sccache-processed
+        - name: proxy-config-processor
+          image: {{ .Values.image }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - "envsubst '$NODE_IP' < /etc/nginx-template/nginx.conf > /etc/nginx-processed/nginx.conf"
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: proxy-config-template
+              mountPath: /etc/nginx-template
+              readOnly: true
+            - name: proxy-config-processed
+              mountPath: /etc/nginx-processed
       containers:
         - name: worker
           image: {{ .Values.image }}
@@ -38,14 +72,23 @@ spec:
           command: ["sccache-dist"]
           args: ["server", "--config", "/etc/sccache/worker.conf"]
           volumeMounts:
-            - name: config
-              mountPath: /etc/sccache
+            - name: config-processed
+              mountPath: /etc/sccache/worker.conf
+              subPath: worker.conf
               readOnly: true
             - name: cache
               mountPath: /cache
           env:
             - name: SCCACHE_LOG
               value: "sccache={{ .Values.app.loglevel }}"
+            - name: HTTP_PROXY
+              value: "http://127.0.0.1:8080"
+            - name: HTTPS_PROXY
+              value: "http://127.0.0.1:8080"
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           ports:
             - containerPort: 10501
               name: worker
@@ -57,10 +100,40 @@ spec:
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        - name: proxy
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+              name: proxy
+          volumeMounts:
+            - name: proxy-config-processed
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /healthz
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /healthz
+          
       volumes:
-        - name: config
+        # worker config before processing
+        - name: config-template
           configMap:
             name: {{ include "sccache.fullname" . }}-worker-config
+        # worker config after processing
+        - name: config-processed
+          emptyDir: {}
+        # proxy config before processing
+        - name: proxy-config-template
+          configMap:
+            name: {{ include "sccache.fullname" . }}-worker-proxy-config
+        # proxy config after processing
+        - name: proxy-config-processed
+          emptyDir: {}
         - name: cache
           emptyDir:
             sizeLimit: 10Gi

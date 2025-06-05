@@ -8,7 +8,8 @@ metadata:
 data:
   worker.conf: |
     cache_dir = "/cache"
-    public_addr = "0.0.0.0:10501"
+    bind_address = "0.0.0.0:10501"
+    public_addr = "${NODE_IP}:10501"
     scheduler_url = "{{ printf "http://%s-scheduler.%s.svc.cluster.local:7634" (include "sccache.fullname" .) .Release.Namespace }}"
 
     [builder]
