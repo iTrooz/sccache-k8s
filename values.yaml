@@ -29,11 +29,7 @@ scheduler:
   readinessProbe:
     tcpSocket:
       port: scheduler
-  extra_config: {}
-    # Additional scheduler configuration can be added here
-    # Example:
-    # max_idle_time = "3600s"
-    # heartbeat_timeout = "30s"
+  extra_config: {} # Additional scheduler configuration can be added here
 
 worker:
   podAnnotations: {}
@@ -46,12 +42,7 @@ worker:
   readinessProbe:
     tcpSocket:
       port: worker
-  extra_config: {}
-    # Additional worker configuration can be added here
-    # Example:
-    # max_connections = 100
-    # idle_timeout = "600s"
-    # cache_size_limit = "10G"
+  extra_config: {} # Additional scheduler configuration can be added here
 
 app:
   client_token: "" # set in values.local.yaml
