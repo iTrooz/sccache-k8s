@@ -35,6 +35,9 @@ spec:
             - name: config
               mountPath: /etc/sccache
               readOnly: true
+          env:
+            - name: SCCACHE_NO_DAEMON
+              value: "1"
           ports:
             - containerPort: 7634
               name: scheduler
