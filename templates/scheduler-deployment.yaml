@@ -30,7 +30,7 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
-          args: ["scheduler", "--config", "/etc/sccache/scheduler.conf", "--syslog", "{{ .Values.app.loglevel }}"]
+          args: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
           volumeMounts:
             - name: config
               mountPath: /etc/sccache
@@ -38,6 +38,8 @@ spec:
           env:
             - name: SCCACHE_NO_DAEMON
               value: "1"
+            - name: SCCACHE_LOG
+              value: "sccache={{ .Values.app.loglevel }}"
           ports:
             - containerPort: 7634
               name: scheduler

@@ -36,13 +36,16 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
-          args: ["server", "--config", "/etc/sccache/worker.conf", "--syslog", "{{ .Values.app.loglevel }}"]
+          args: ["server", "--config", "/etc/sccache/worker.conf"]
           volumeMounts:
             - name: config
               mountPath: /etc/sccache
               readOnly: true
             - name: cache
               mountPath: /cache
+          env:
+            - name: SCCACHE_LOG
+              value: "sccache={{ .Values.app.loglevel }}"
           ports:
             - containerPort: 10501
               name: worker
