@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sccache.fullname" . }}-worker
+  name: {{ include "sccache.fullname" . }}-scheduler
   labels:
     {{- include "sccache.labels" . | nindent 4 }}
 spec:
@@ -12,4 +12,5 @@ spec:
       protocol: TCP
       name: scheduler
   selector:
+    app.kubernetes.io/component: scheduler
     {{- include "sccache.selectorLabels" . | nindent 4 }}
