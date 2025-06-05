@@ -8,7 +8,7 @@ metadata:
 data:
   worker.conf: |
     cache_dir = "/cache"
-    public_addr = "127.0.0.1:10501"
+    public_addr = "0.0.0.0:10501"
     scheduler_url = "{{ printf "http://%s-scheduler:7634" (include "sccache.fullname" .) }}"
 
     [builder]
