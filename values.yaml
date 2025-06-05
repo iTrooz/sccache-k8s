@@ -24,12 +24,10 @@ scheduler:
   podAnnotations: {}
   podLabels: {}
   livenessProbe:
-    httpGet:
-      path: /health
+    tcpSocket:
       port: scheduler
   readinessProbe:
-    httpGet:
-      path: /ready
+    tcpSocket:
       port: scheduler
   extra_config: {}
     # Additional scheduler configuration can be added here
