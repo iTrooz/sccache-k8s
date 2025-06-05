@@ -11,6 +11,10 @@ spec:
       targetPort: scheduler
       protocol: TCP
       name: scheduler
+    - port: 7634 # for internal access from workers
+      targetPort: scheduler
+      protocol: TCP
+      name: scheduler-internal
   selector:
     app.kubernetes.io/component: scheduler
     {{- include "sccache.selectorLabels" . | nindent 4 }}
