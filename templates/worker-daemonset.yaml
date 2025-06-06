@@ -83,6 +83,8 @@ spec:
               readOnly: true
             - name: cache
               mountPath: /cache
+            - name: tmp
+              mountPath: /tmp
           env:
             - name: SCCACHE_LOG
               value: "sccache={{ .Values.app.loglevel }}"
@@ -142,3 +144,6 @@ spec:
         - name: cache
           emptyDir:
             sizeLimit: 10Gi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 5Gi
