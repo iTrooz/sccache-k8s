@@ -29,7 +29,6 @@ spec:
         - name: scheduler
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          command: ["sccache-dist"]
           args: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
           volumeMounts:
             - name: config

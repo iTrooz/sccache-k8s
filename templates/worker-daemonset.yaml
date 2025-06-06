@@ -69,7 +69,6 @@ spec:
         - name: worker
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          command: ["sccache-dist"]
           args: ["server", "--config", "/etc/sccache/worker.conf"]
           securityContext:
             privileged: true # needed because sccache isolates builders using mount/etc.. namespaces
