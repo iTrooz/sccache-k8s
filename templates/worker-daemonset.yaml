@@ -72,10 +72,7 @@ spec:
           command: ["sccache-dist"]
           args: ["server", "--config", "/etc/sccache/worker.conf"]
           securityContext:
-            privileged: true
-            capabilities:
-              add:
-                - SYS_ADMIN
+            privileged: true # needed because sccache isolates builders using mount/etc.. namespaces
           volumeMounts:
             - name: config-processed
               mountPath: /etc/sccache/worker.conf
