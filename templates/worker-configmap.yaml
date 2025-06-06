@@ -9,7 +9,7 @@ data:
   worker.conf: |
     cache_dir = "/cache"
     bind_address = "0.0.0.0:10501"
-    public_addr = "${NODE_IP}:10501"
+    public_addr = "${NODE_IP}:30501" # service will do 30501->10501
     scheduler_url = "{{ printf "http://%s-scheduler.%s.svc.cluster.local:7634" (include "sccache.fullname" .) .Release.Namespace }}"
 
     [builder]
