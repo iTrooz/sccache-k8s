@@ -71,6 +71,11 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["sccache-dist"]
           args: ["server", "--config", "/etc/sccache/worker.conf"]
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
           volumeMounts:
             - name: config-processed
               mountPath: /etc/sccache/worker.conf
