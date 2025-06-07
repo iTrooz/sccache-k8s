@@ -6,6 +6,9 @@ RUN --mount=type=cache,target=/var/cache/pacman \
     pacman -S --noconfirm \
         rust cargo \
         gcc clang \
-        sccache bubblewrap
+        bubblewrap openssl pkg-config
 
-ENTRYPOINT ["/bin/sccache-dist"]
+RUN --mount=type=cache,target=/cargo-cache \
+    cargo install --git https://github.com/iTrooz/sccache sccache --target-dir /cargo-cache --features="dist-client dist-server"
+
+ENTRYPOINT ["/root/.cargo/bin/sccache-dist"]
