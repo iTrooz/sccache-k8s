@@ -6,7 +6,7 @@ RUN --mount=type=cache,target=/var/cache/pacman \
     pacman -S --noconfirm cargo bubblewrap openssl pkg-config
 
 RUN --mount=type=cache,target=/cargo-cache \
-    cargo install --git https://github.com/iTrooz/sccache sccache --target-dir /cargo-cache --features="dist-client dist-server"
+    cargo install sccache --target-dir /cargo-cache --features="dist-client dist-server"
         
 ADD https://github.com/krallin/tini/releases/latest/download/tini /usr/local/bin/tini
 RUN chmod +x /usr/local/bin/tini
