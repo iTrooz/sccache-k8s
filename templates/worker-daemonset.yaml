@@ -35,6 +35,7 @@ spec:
       initContainers:
         - name: worker-config-processor
           image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["/bin/sh", "-c"]
           args:
             - "envsubst '$NODE_IP' < /etc/sccache-template/worker.conf > /etc/sccache-processed/worker.conf"
@@ -51,6 +52,7 @@ spec:
               mountPath: /etc/sccache-processed
         - name: proxy-config-processor
           image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           command: ["/bin/sh", "-c"]
           args:
             - "envsubst '$NODE_IP' < /etc/nginx-template/nginx.conf > /etc/nginx-processed/nginx.conf"
