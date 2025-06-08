@@ -1,14 +1,7 @@
-FROM archlinux:latest
+FROM alpine:latest AS builder
 
-# Update system, install packages, and clean up
-RUN --mount=type=cache,target=/var/cache/pacman \
-    pacman -Syu --noconfirm && \
-    pacman -S --noconfirm cargo bubblewrap openssl pkg-config
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk update && \
+    apk add --no-cache sccache-dist bubblewrap tini envsubst
 
-RUN --mount=type=cache,target=/cargo-cache \
-    cargo install sccache --target-dir /cargo-cache --features="dist-client dist-server"
-        
-ADD https://github.com/krallin/tini/releases/latest/download/tini /usr/local/bin/tini
-RUN chmod +x /usr/local/bin/tini
-
-ENTRYPOINT ["/usr/local/bin/tini", "--", "/root/.cargo/bin/sccache-dist"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/sccache-dist"]

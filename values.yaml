@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 
-image: ghcr.io/itrooz/sccache:archlinux
+image: ghcr.io/itrooz/sccache:latest
 imagePullPolicy: Always
 
 # Scheduler service
