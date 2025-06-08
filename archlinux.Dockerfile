@@ -8,7 +8,7 @@ RUN --mount=type=cache,target=/var/cache/pacman \
 RUN --mount=type=cache,target=/cargo-cache \
     cargo install --git https://github.com/iTrooz/sccache sccache --target-dir /cargo-cache --features="dist-client dist-server"
         
-ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini /usr/local/bin/tini
+ADD https://github.com/krallin/tini/releases/latest/download/tini /usr/local/bin/tini
 RUN chmod +x /usr/local/bin/tini
 
 ENTRYPOINT ["/usr/local/bin/tini", "--", "/root/.cargo/bin/sccache-dist"]
