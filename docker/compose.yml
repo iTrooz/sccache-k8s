@@ -3,9 +3,8 @@ services:
     image: ghcr.io/itrooz/sccache:latest
     command: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
     environment:
-      RUST_LOG: trace
       SCCACHE_NO_DAEMON: "1"
-      SCCACHE_LOG: "sccache=trace"
+      SCCACHE_LOG: "sccache=info"
     volumes:
       - ./scheduler.conf:/etc/sccache/scheduler.conf:ro
     ports:
