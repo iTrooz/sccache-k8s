@@ -1,0 +1,29 @@
+services:
+  scheduler:
+    image: ghcr.io/itrooz/sccache:latest
+    command: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
+    environment:
+      RUST_LOG: trace
+      SCCACHE_NO_DAEMON: "1"
+      SCCACHE_LOG: "sccache=trace"
+    volumes:
+      - ./scheduler.conf:/etc/sccache/scheduler.conf:ro
+    ports:
+      - "7634:7634"
+
+  worker:
+    image: ghcr.io/itrooz/sccache:latest
+    command: ["server", "--config", "/etc/sccache/worker.conf"]
+    environment:
+      SCCACHE_LOG: "sccache=info"
+    privileged: true
+    depends_on:
+      - scheduler
+    volumes:
+      - ./worker.conf:/etc/sccache/worker.conf:ro
+      - sccache-cache:/cache
+    ports:
+      - "10501:10501"
+
+volumes:
+  sccache-cache:
