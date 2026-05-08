@@ -4,4 +4,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk update && \
     apk add --no-cache sccache-dist bubblewrap tini envsubst
 
+VOLUME /volume
+
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/sccache-dist"]
