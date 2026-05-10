@@ -9,6 +9,9 @@ services:
       - ./scheduler.conf:/etc/sccache/scheduler.conf:ro
     ports:
       - "7634:7634"
+    networks:
+      sccache-net:
+        ipv4_address: 172.29.0.3
 
   worker:
     image: ghcr.io/itrooz/sccache:latest
@@ -23,6 +26,16 @@ services:
       - sccache-cache:/cache
     ports:
       - "10501:10501"
+    networks:
+      sccache-net:
+        ipv4_address: 172.29.0.2
 
 volumes:
   sccache-cache:
+
+networks:
+  sccache-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/24
