@@ -1,0 +1,19 @@
+app:
+  client_token: "CHANGEME_pc_to_scheduler_token"
+  scheduler_token: "CHANGEME_builder_to_scheduler_token"
+  loglevel: "info"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: sccache.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+   - secretName: sccache.example.com
+     hosts:
+       - sccache.example.com
