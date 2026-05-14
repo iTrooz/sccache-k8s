@@ -1,6 +1,6 @@
 services:
   scheduler:
-    image: ghcr.io/itrooz/sccache:latest
+    image: ghcr.io/itrooz/sccache:custom
     command: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
     environment:
       SCCACHE_NO_DAEMON: "1"
@@ -14,7 +14,7 @@ services:
         ipv4_address: 172.29.0.3
 
   worker:
-    image: ghcr.io/itrooz/sccache:latest
+    image: ghcr.io/itrooz/sccache:custom
     command: ["server", "--config", "/etc/sccache/worker.conf"]
     environment:
       SCCACHE_LOG: "sccache=info"
