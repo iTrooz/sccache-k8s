@@ -19,7 +19,7 @@ services:
     command: ["server", "--config", "/etc/sccache/worker.conf"]
     environment:
       SCCACHE_LOG: "sccache=info"
-    privileged: true
+    privileged: true # Needed to create namespaces for jobs
     depends_on:
       - scheduler
     volumes:
