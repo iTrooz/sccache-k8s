@@ -2,6 +2,7 @@ services:
   scheduler:
     image: ghcr.io/itrooz/sccache:custom
     command: ["scheduler", "--config", "/etc/sccache/scheduler.conf"]
+    user: nobody
     environment:
       SCCACHE_NO_DAEMON: "1"
       SCCACHE_LOG: "sccache=info"
