@@ -14,12 +14,19 @@ services:
       sccache-net:
         ipv4_address: 172.29.0.3
 
+# Note: this build jobs isolation makes the build server somewhat privileged (note comments below)
+# The below permissions are the reduced subset of --privileged that are needed to run it
+# It should be run under a user namespace when possible
   worker:
     image: ghcr.io/itrooz/sccache:custom
     command: ["server", "--config", "/etc/sccache/worker.conf"]
     environment:
       SCCACHE_LOG: "sccache=info"
-    privileged: true # Needed to create namespaces for jobs
+    cap_add:
+      - SYS_ADMIN # Needed for the first `unshare -m` call
+    security_opt: # Needed to create namespaces for jobs (handled by bwrap)
+      - seccomp=unconfined
+      - systempaths=unconfined
     depends_on:
       - scheduler
     volumes:
